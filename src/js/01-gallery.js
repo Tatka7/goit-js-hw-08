@@ -28,9 +28,9 @@ galleryBoxEl.innerHTML = createListItemsMarkup(galleryItems);
 
 let gallery = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
-  scrollZoom: false,
-  captionType: 'attr',
-  captionSelector: 'img',
+  // scrollZoom: false,
+  // captionType: 'attr',
+  // captionSelector: 'img',
   captionsData: 'alt',
-  docClose: false,
+  // docClose: false,
 });

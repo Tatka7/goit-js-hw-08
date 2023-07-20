@@ -2,35 +2,48 @@ import throttle from 'lodash.throttle';
 
 const formEl = document.querySelector('.feedback-form');
 const LOCALSTORAGE_KEY = 'feedback-form-state';
+const inputEl = document.querySelector('input');
+const textareaEl = document.querySelector('textarea');
 
-const formData = {};
-
-isLocalStoargeHasValue();
 
 formEl.addEventListener('input', throttle(onFormFillInput, 500));
-formEl.addEventListener('submit', onSubmitButtonCkick);
+formEl.addEventListener('submit', onSubmitButtonClick);
+
+if (localStorage.getItem(LOCALSTORAGE_KEY)) {
+  const { email, message } = JSON.parse(
+      localStorage.getItem(LOCALSTORAGE_KEY)
+  );
+
+  inputEl.value = email;
+  textareaEl.value = message;
+}
 
 function onFormFillInput(e) {
-  if (e.target.nodeName === 'INPUT') formData[e.target.name] = e.target.value;
-  else {
-    formData[e.target.name] = e.target.value;
+  const formData = { email: '', message: '' };
+  if (e.target.nodeName === 'INPUT') {
+    formData.email = e.target.value;
+    formData.message = textareaEl.value;
+  } else {
+    formData.message = e.target.value;
+    formData.email = inputEl.value;
   }
+
   localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(formData));
 }
 
-function onSubmitButtonCkick(e) {
+function onSubmitButtonClick(e) {
   e.preventDefault();
-  const localStorageValue = localStorage.getItem(LOCALSTORAGE_KEY);
-  console.log(JSON.parse(localStorageValue));
-  e.currentTarget.reset();
-  localStorage.removeItem(LOCALSTORAGE_KEY);
-}
 
-function isLocalStoargeHasValue() {
-  const localStorageValue = localStorage.getItem(LOCALSTORAGE_KEY);
-  const objectFromLocalStorage = JSON.parse(localStorageValue);
-  if (localStorageValue) {
-    formEl.elements.email.value = objectFromLocalStorage.email;
-    formEl.elements.message.value = objectFromLocalStorage.message;
+  const { email, message } = e.currentTarget.elements;
+
+  if (!email.value || !message.value) {
+        alert('Please fill out all the fields!');
+        return;
   }
+  console.log(JSON.parse(
+  localStorage.getItem(LOCALSTORAGE_KEY)));
+
+  formEl.reset();
+
+  localStorage.clear();
 }
